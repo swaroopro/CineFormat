@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineFormat // Ultimate India Premium Theatre Guide</title>
+    <style>
+        :root {
+            --bg-base: #050507;
+            --bg-surface: #0e0e12;
+            --bg-card: #14141c;
+            --accent-neon: #ff2a4b;
+            --accent-glow: rgba(255, 42, 75, 0.4);
+            --text-primary: #ffffff;
+            --text-secondary: #8e90a2;
+            --gold: #ffb800;
+            --screenx-blue: #00f0ff;
+            --font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-family: var(--font-family);
+            overflow-x: hidden;
+            padding-bottom: 80px;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 85vw;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 42, 75, 0.08) 0%, transparent 65%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        header {
+            text-align: center;
+            padding: 45px 20px 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--text-primary);
+            text-shadow: 0 0 15px var(--accent-glow);
+            margin-bottom: 4px;
+        }
+
+        .logo span { color: var(--accent-neon); }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            letter-spacing: 1.5px;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        /* Swaroop Signature Badge Styling Header */
+        .creator-badge-header {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #d1d1d6;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .creator-badge-header span {
+            color: var(--accent-neon);
+            text-shadow: 0 0 8px var(--accent-glow);
+        }
+
+        .creator-badge-header:hover {
+            border-color: var(--accent-neon);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 42, 75, 0.2);
+            color: #fff;
+        }
+
+        .app-navigation-bar {
+            display: flex;
+            justify-content: center;
+            margin: 25px auto 35px;
+            max-width: 500px;
+            background: var(--bg-surface);
+            padding: 6px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.06);
+            gap: 5px;
+        }
+
+        .page-tab-btn {
+            background: transparent;
+            color: var(--text-secondary);
+            border: none;
+            padding: 12px 24px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-radius: 8px;
+            cursor: pointer;
+            flex: 1;
+            transition: all 0.3s;
+        }
+
+        .page-tab-btn.active {
+            background: var(--bg-card);
+            color: var(--accent-neon);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .app-page { display: none; }
+        .app-page.active-page { display: block; }
+
+        .credits-card {
+            background: linear-gradient(90deg, rgba(255,184,0,0.08) 0%, rgba(255,42,75,0.04) 100%);
+            border: 1px solid rgba(255, 184, 0, 0.25);
+            border-radius: 14px;
+            padding: 16px 24px;
+            margin-bottom: 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .credits-info { font-size: 0.95rem; color: #e2e2e9; }
+        .credits-info strong { color: var(--gold); }
+
+        .insta-link-btn {
+            background: #ffb800;
+            color: #000;
+            text-decoration: none;
+            padding: 9px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .insta-link-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 18px rgba(255, 184, 0, 0.4);
+        }
+
+        .sandbox-stage {
+            background: #000000;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            aspect-ratio: 1.43 / 1;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid #1a1a24;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .screen-mask {
+            position: absolute;
+            left: 0;
+            right: 0;
+            background: #030304;
+            z-index: 4;
+            transition: height 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72rem;
+            color: #4a4a5e;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+
+        .mask-top { top: 0; height: 0%; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .mask-bottom { bottom: 0; height: 0%; border-top: 1px solid rgba(255,255,255,0.03); }
+
+        .projection-matte-core {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #222232 0%, #111118 100%);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            z-index: 2;
+        }
+
+        .matte-title { font-weight: 900; font-size: 1.5rem; color: #ffffff; text-shadow: 0 4px 10px rgba(0,0,0,0.9); }
+        .matte-subtitle { font-size: 0.9rem; color: var(--text-secondary); margin-top: 6px; text-align: center; max-width: 520px; line-height: 1.4; }
+
+        .visualizer-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 40px;
+            width: 100%;
+            max-width: 950px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .viz-btn {
+            background: linear-gradient(135deg, #161622 0%, #0d0d14 100%);
+            color: var(--text-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 18px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: var(--font-family);
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            text-align: left;
+        }
+
+        .viz-btn::with-meta {}
+        .viz-btn::after {
+            content: attr(data-meta);
+            font-size: 0.72rem;
+            color: #5d5f75;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+
+        .viz-btn::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: transparent;
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+
+        .viz-btn:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 42, 75, 0.25);
+            color: var(--text-primary);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .viz-btn:hover::after { color: rgba(255, 255, 255, 0.5); }
+
+        .viz-btn.active {
+            background: linear-gradient(135deg, #1c1c2b 0%, #11111a 100%);
+            color: #ffffff;
+            border-color: rgba(255, 42, 75, 0.5);
+            box-shadow: 0 10px 25px rgba(255, 42, 75, 0.15), inset 0 1px 0 rgba(255, 42, 75, 0.1);
+            font-weight: 800;
+        }
+
+        .viz-btn.active::before { background: var(--accent-neon); box-shadow: 0 0 10px var(--accent-neon); }
+        .viz-btn.active::after { color: var(--accent-neon); text-shadow: 0 0 8px rgba(255, 42, 75, 0.3); }
+
+        .navigation-scroller { margin-bottom: 35px; }
+        .navbar-track {
+            display: flex;
+            background: var(--bg-surface);
+            padding: 8px;
+            border-radius: 40px;
+            border: 1px solid rgba(255,255,255,0.06);
+            overflow-x: auto;
+            gap: 5px;
+        }
+        .navbar-track::-webkit-scrollbar { display: none; }
+
+        .segment-tab-btn {
+            background: transparent;
+            color: var(--text-secondary);
+            border: none;
+            padding: 12px 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-size: 0.78rem;
+            border-radius: 30px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s;
+            flex: 1;
+            text-align: center;
+        }
+
+        .segment-tab-btn.active {
+            background: var(--accent-neon);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 42, 75, 0.35);
+        }
+
+        .filter-row { display: flex; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; }
+        .input-search {
+            background: var(--bg-surface); border: 1px solid rgba(255,255,255,0.08);
+            padding: 14px 20px; border-radius: 10px; color: white; font-size: 0.95rem; transition: all 0.3s; flex: 2; min-width: 260px;
+        }
+        .dropdown-select {
+            background: var(--bg-surface); border: 1px solid rgba(255,255,255,0.08);
+            padding: 14px 20px; border-radius: 10px; color: white; font-size: 0.95rem; transition: all 0.3s; flex: 1; min-width: 180px; cursor: pointer;
+        }
+        .input-search:focus, .dropdown-select:focus { outline: none; border-color: var(--accent-neon); box-shadow: 0 0 12px rgba(255, 42, 75, 0.25); }
+
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 30px; }
+        .stub-card {
+            background: var(--bg-surface); border-radius: 18px; overflow: hidden; position: relative;
+            border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 12px 25px rgba(0,0,0,0.4);
+            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; display: flex; flex-direction: column;
+        }
+        .stub-card:hover { transform: translateY(-5px); border-color: rgba(255, 42, 75, 0.4); box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
+
+        .stub-card::before, .stub-card::after { content: ''; position: absolute; top: 75px; width: 16px; height: 16px; background: var(--bg-base); border-radius: 50%; z-index: 3; }
+        .stub-card::before { left: -8px; } .stub-card::after { right: -8px; }
+
+        .stub-header { padding: 24px 26px 16px; border-bottom: 1px dashed rgba(255,255,255,0.12); position: relative; }
+        .stub-tag { position: absolute; top: 24px; right: 26px; font-size: 0.72rem; text-transform: uppercase; font-weight: 800; padding: 4px 10px; border-radius: 5px; letter-spacing: 0.5px; }
+
+        .tag-imax143 { background: rgba(255, 42, 75, 0.15); color: var(--accent-neon); border: 1px solid rgba(255,42,75,0.2); }
+        .tag-imaxstd { background: rgba(0, 180, 216, 0.15); color: #00b4d8; border: 1px solid rgba(0,180,216,0.2); }
+        .tag-dolby { background: rgba(162, 0, 255, 0.15); color: #b666ff; border: 1px solid rgba(162,0,255,0.2); }
+        .tag-barco { background: rgba(234, 134, 0, 0.15); color: #ff9f43; border: 1px solid rgba(234,134,0,0.2); }
+        .tag-epiq { background: rgba(255, 184, 0, 0.15); color: var(--gold); border: 1px solid rgba(255,184,0,0.2); }
+        .tag-onyx { background: rgba(0, 240, 255, 0.15); color: var(--screenx-blue); border: 1px solid rgba(0,240,255,0.2); }
+        .tag-screenx { background: rgba(40, 199, 111, 0.15); color: #28c76f; border: 1px solid rgba(40,199,111,0.2); }
+
+        .stub-title { font-size: 1.25rem; font-weight: 800; margin-bottom: 5px; padding-right: 110px; line-height: 1.3; }
+        .stub-subtitle { color: var(--text-secondary); font-size: 0.9rem; font-weight: 600; }
+        .stub-body { padding: 22px 26px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex-grow: 1; }
+
+        .info-cell { display: flex; flex-direction: column; }
+        .cell-label { font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .cell-value { font-size: 0.95rem; font-weight: 600; color: var(--text-primary); }
+
+        .status-pill { display: inline-block; font-size: 0.72rem; font-weight: 800; padding: 2px 8px; border-radius: 5px; text-transform: uppercase; }
+        .status-open { background: rgba(40, 199, 111, 0.15); color: #28c76f; }
+        .status-closed { background: rgba(234, 84, 85, 0.15); color: #ea5455; }
+        .status-other { background: rgba(115, 103, 240, 0.15); color: #7367f0; }
+
+        .footer-about-box { margin-top: 60px; background: var(--bg-surface); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 35px; text-align: center; }
+        .footer-about-box h3 { text-transform: uppercase; font-size: 1.15rem; letter-spacing: 1px; margin-bottom: 12px; }
+        .footer-about-box p { font-size: 0.95rem; color: var(--text-secondary); max-width: 750px; margin: 0 auto 20px; line-height: 1.6; }
+
+        /* Highly Styled Creator Signature Bottom Link Section */
+        .platform-author-anchor {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #181826 0%, #0e0e16 100%);
+            border: 1px solid rgba(255, 42, 75, 0.15);
+            padding: 10px 22px;
+            border-radius: 30px;
+            color: #ffffff;
+            font-size: 0.88rem;
+            font-weight: bold;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            margin-top: 10px;
+        }
+
+        .platform-author-anchor strong {
+            color: var(--accent-neon);
+            text-shadow: 0 0 10px rgba(255, 42, 75, 0.4);
+        }
+
+        .platform-author-anchor:hover {
+            border-color: var(--accent-neon);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(255, 42, 75, 0.25);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Cine<span>Format</span></div>
+        <p>Premium Cinema Screening & Formatting Index // India</p>
+        <!-- Swaroop Signature Link In Header Panel Layout -->
+        <a href="https://x.com/AstroBlaze07" target="_blank" class="creator-badge-header">
+            Made by <span>Swaroop (AstroBlaze07)</span>
+        </a>
+    </header>
+
+    <div class="app-navigation-bar">
+        <button class="page-tab-btn active" id="tab-link-explorer" onclick="navigateToPage('explorer')">Theatre Explorer</button>
+        <button class="page-tab-btn" id="tab-link-sandbox" onclick="navigateToPage('sandbox')">Aspect Ratio Sandbox</button>
+    </div>
+
+    <div class="container">
+
+        <div class="credits-card">
+            <div class="credits-info">
+                📊 Data Source Verification: Built directly from the official database created and managed by <strong>Kaustubh Debnath (KD Cloudy)</strong>.
+            </div>
+            <a href="https://www.instagram.com/kdcloudy" target="_blank" class="insta-link-btn">Instagram: @kdcloudy</a>
+        </div>
+
+        <!-- PAGE 1: SANDBOX ENGINE -->
+        <section id="page-sandbox" class="app-page">
+            <div class="visualizer-card" style="background: var(--bg-surface); padding: 35px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.04);">
+                <h2 class="card-heading" style="text-align: center; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1.5px;">Proportional Height Scaling Engine</h2>
+                <p style="text-align: center; color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 30px;">
+                    The screen frame below is locked entirely to the **Native IMAX 1.43:1** footprint. Toggling formats updates the horizontal curtain blinds to demonstrate exactly how much layout area is masked.
+                </p>
+                
+                <div class="sandbox-stage">
+                    <div id="blindTop" class="screen-mask mask-top"></div>
+                    <div class="projection-matte-core">
+                        <div id="matteHead" class="matte-title">IMAX GT 1.43:1</div>
+                        <div id="matteDesc" class="matte-subtitle">Native Full Stature Output Layer. Uses maximum physical screen surface space.</div>
+                    </div>
+                    <div id="blindBottom" class="screen-mask mask-bottom"></div>
+                </div>
+                
+                <div class="visualizer-actions">
+                    <button class="viz-btn active" data-meta="1.43:1 Full Height" onclick="scaleMatteHeight(1.43, 'IMAX GT 1.43:1', 'Native Maximum Structural Presence. Zero structural letterboxing present across the projection canvas sheet.', this)">IMAX GT Frame</button>
+                    <button class="viz-btn" data-meta="1.90:1 Widescreen" onclick="scaleMatteHeight(1.90, 'IMAX Digital / Laser 1.90:1', 'Standard configuration window. Top and bottom boundaries drop down, losing ~25% of total native vertical projection surface layer.', this)">IMAX Digital</button>
+                    <button class="viz-btn" data-meta="1.85:1 Flat Profile" onclick="scaleMatteHeight(1.85, 'PLF Widescreen Flat 1.85:1', 'Baseline standard flat profile mapping. Standard configuration layout across non-IMAX premium auditoriums.', this)">Flat Format</button>
+                    <button class="viz-btn" data-meta="2.39:1 Scope Profile" onclick="scaleMatteHeight(2.39, 'Anamorphic Cinemascope 2.39:1', 'Ultra-widescreen cinematic layout formatting. Strict masking bars apply to the column bounds, reducing total height layout to its thin strip profile format.', this)">Cinemascope</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 2: GRID CORE -->
+        <section id="page-explorer" class="app-page active-page">
+            <div class="navigation-scroller">
+                <div class="navbar-track">
+                    <button class="segment-tab-btn active" id="seg-imax143" onclick="changeActiveSegment('imax143')">IMAX 1.43 (GT)</button>
+                    <button class="segment-tab-btn" id="seg-imaxstd" onclick="changeActiveSegment('imaxstd')">IMAX Standard (36 Active Digital)</button>
+                    <button class="segment-tab-btn" id="seg-dolby" onclick="changeActiveSegment('dolby')">Dolby Cinema</button>
+                    <button class="segment-tab-btn" id="seg-barco" onclick="changeActiveSegment('barco')">HDR by Barco</button>
+                    <button class="segment-tab-btn" id="seg-epiq" onclick="changeActiveSegment('epiq')">EPIQ Luxe</button>
+                    <button class="segment-tab-btn" id="seg-onyx" onclick="changeActiveSegment('onyx')">Samsung Onyx</button>
+                    <button class="segment-tab-btn" id="seg-screenx" onclick="changeActiveSegment('screenx')">ScreenX / Others</button>
+                </div>
+            </div>
+
+            <div class="filter-row">
+                <input type="text" id="filterInputSearch" class="input-search" placeholder="Filter by complex theater name or region city location..." oninput="drawGridMatrix()">
+                <select id="filterDropdownCity" class="dropdown-select" onchange="drawGridMatrix()">
+                    <option value="">All Regions</option>
+                </select>
+            </div>
+
+            <div class="grid-container" id="ticketStubContainer"></div>
+        </section>
+
+        <footer class="footer-about-box">
+            <h3>Platform Information Layer</h3>
+            <p>CineFormat tracks screen aspect layouts, projection systems, and theater configurations across premium venues in India. All technical data properties displayed inside this matrix are sourced from the verified collections of <strong>Kaustubh Debnath</strong>.</p>
+            <p>Follow his official digital platform for premium tech releases: <a href="https://www.instagram.com/kdcloudy" target="_blank" style="color: var(--gold); text-decoration:none; font-weight:700;">@kdcloudy on Instagram</a>.</p>
+            
+            <!-- Highly Styled Signature Button Link At Footer Section Frame Layout -->
+            <div style="margin-top: 25px;">
+                <a href="https://x.com/AstroBlaze07" target="_blank" class="platform-author-anchor">
+                    ⚡ Application Architecture: <strong>Swaroop (AstroBlaze07)</strong>
+                </a>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        const DATA_IMAX_143 = [
+            {"location": "Gujarat Science City", "city": "Ahmedabad", "projection": "IMAX 15/70 GT Film 3D", "tech_type": "70mm Film GT", "aspect_ratio": "1.43:1 Native GT", "screen_type": "IMAX Massive GT", "audio": "5.1 Analog Multi-Bass Sound", "width": "96 ft", "height": "67 ft", "status": "Open"},
+            {"location": "Prasads IMAX", "city": "Hyderabad", "projection": "15/70 Film Historic", "tech_type": "Dual Laser GT", "aspect_ratio": "1.43:1 Footprint", "screen_type": "IMAX Large Frame", "audio": "Analog Layers Layout", "width": "30.9 ft", "height": "19.5 ft", "status": "Converted"},
+            {"location": "Aeren R IMAX Mani Square", "city": "Kolkata", "projection": "15/70 GT Film Frame", "tech_type": "70mm Film GT", "aspect_ratio": "1.43:1 Layout", "screen_type": "IMAX Structural", "audio": "5.1 Digital Enhanced Sound", "width": "Custom Size", "height": "Custom Size", "status": "Converted"},
+            {"location": "Aeren R IMAX Pacific Mall", "city": "Ghaziabad", "projection": "15/70 GT Film Frame", "tech_type": "70mm Film GT", "aspect_ratio": "1.43:1 Layout", "screen_type": "IMAX New Spec", "audio": "5.1 Digital Enhanced Sound", "width": "Custom Size", "height": "Custom Size", "status": "Converted"}
+        ];
+
+        const DATA_IMAX_STD = [
+            {"location": "Miraj IMAX Wadala", "city": "Mumbai", "projection": "IMAX XT Laser 3D", "tech_type": "XT Laser", "aspect_ratio": "1.90:1 Widescreen", "screen_type": "IMAX Standard Layer", "audio": "5.1 Digital Enhanced Sound", "width": "71.7 ft", "height": "40.6 ft", "status": "Open"},
+            {"location": "Broadway Megaplex", "city": "Coimbatore", "projection": "IMAX XT Laser 3D", "tech_type": "XT Laser", "aspect_ratio": "1.90:1 Widescreen", "screen_type": "IMAX Commercial", "audio": "12-Channel Immersive Sound", "width": "71 ft", "height": "37 ft", "status": "Open"},
+            {"location": "PVR Bhutani City Centre 32", "city": "Noida", "projection": "IMAX Dual Xenon 3D", "tech_type": "Dual Xenon", "aspect_ratio": "1.90:1 Widescreen", "screen_type": "IMAX Xenon Twin", "audio": "5.1 Digital Enhanced Sound", "width": "70.52 ft", "height": "39.68 ft", "status": "Open"},
+            {"location": "PVR Palazzo Nexus Mall", "city": "Chennai", "projection": "IMAX XT Laser 3D", "tech_type": "XT Laser", "aspect_ratio": "1.90:1 Widescreen", "screen_type": "IMAX Immersive Panel", "audio": "12-Channel Immersive Sound", "width": "70 ft", "height": "39.1 ft", "status": "Open"},
+            {"location": "INOX Skycity Oberoi Mall", "city": "Mumbai", "projection": "IMAX XT Laser 3D", "tech_type": "XT Laser", "aspect_ratio": "1.90:1 Widescreen", "screen_type": "IMAX Standard Layer", "audio": "5.1 Digital Enhanced Sound", "width": "69 ft", "height": "36 ft", "status": "Open"},
+            {"location": "PVR Priya IMAX", "city": "New Delhi", "projection": "IMAX XT Laser 3D", "tech_type": "XT Laser", "aspect_ratio": "1.90:1 Widescreen", "screen_type": "IMAX Premium Layout", "audio": "12-Channel Immersive Sound", "width": "68.88 ft", "height": "36.08 ft", "status": "Open"},
+            {"location": "PVR Vegas Mall", "city": "New Delhi", "projection": "IMAX Dual Xenon 3D", "tech_type": "Dual Xenon", "aspect_ratio": "1.90:1 Widescreen", "screen_type": "IMAX Twin Projector", "audio": "5.1 Digital Enhanced Sound", "width": "68.22 ft", "height": "38.04 ft", "status": "Open"},
+            {"location": "PVR LULU Mall", "city": "Trivandrum", "projection": "IMAX Dual Xenon 3D", "tech_type": "Dual Xenon", "aspect_ratio": "1.90:1 Widescreen", "screen_type": "IMAX Twin Projector", "audio": "5.1 Digital Sound Layer", "width": "65.6 ft", "height": "36.08 ft", "status": "Open"},
+            {"location": "INOX Luxe Phoenix Mall", "city": "Chennai", "projection": "IMAX Dual Xenon 3D", "tech_type": "Dual Xenon", "aspect_ratio": "1.90:1 Widescreen", "screen_type": "IMAX Twin Projector", "audio": "5.1 Digital Sound Layer", "width": "63.30 ft", "height": "35.09 ft", "status": "Open"},
+            {"location": "PVR Phoenix Lower Parel", "city": "Mumbai", "projection": "IMAX Commercial Laser 3D", "tech_type": "Commercial Laser", "aspect_ratio": "1.90:1 Widescreen", "screen_type": "IMAX Single Pod Laser", "audio": "12-Channel Immersive Sound", "width": "62.7 ft", "height": "32.7 ft", "status": "Open"},
+            {"location": "PVR Vega City", "city": "Bengaluru", "projection": "IMAX Dual Xenon 3D", "tech_type": "Dual Xenon", "aspect_ratio": "1.90:1 Widescreen", "screen_type": "IMAX Twin Projector", "audio": "5.1 Digital Sound Layer", "width": "62.31 ft", "height": "33.45 ft", "status": "Open"},
+            {"location": "PVR VR Bengaluru", "city": "Bengaluru", "projection": "IMAX Dual Xenon 3D", "tech_type": "Dual Xenon", "aspect_ratio": "1.90:1 Widescreen", "screen_type": "IMAX Twin Projector", "audio": "5.1 Digital Sound Layer", "width": "61.66 ft", "height": "34.11 ft", "status": "Open"},
+            {"location": "PVR Nexus Koramangala", "city": "Bengaluru", "projection": "IMAX XT Laser 3D", "tech_type": "XT Laser", "aspect_ratio": "1.90:1 Widescreen", "screen_type": "IMAX Premium Layout", "audio": "12-Channel Immersive Sound", "width": "61.00 ft", "height": "32.14 ft", "status": "Open"},
+            {"location": "INOX Phoenix Palassio", "city": "Lucknow", "projection": "IMAX Dual Xenon 3D", "tech_type": "Dual Xenon", "aspect_ratio": "1.90:1 Widescreen", "screen_type": "IMAX Twin Projector", "audio": "5.1 Digital Sound Layer", "width": "60.3 ft", "height": "33.4 ft", "status": "Open"},
+            {"location": "INOX Phoenix Mall of Millennium", "city": "Pune", "projection": "IMAX XT Laser 3D", "tech_type": "XT Laser", "aspect_ratio": "1.90:1 Widescreen", "screen_type": "IMAX Single Pod Laser", "audio": "5.1 Digital Sound Layer", "width": "60 ft", "height": "33 ft", "status": "Open"},
+            {"location": "Rajhans Precia Mall", "city": "Surat", "projection": "IMAX XT Laser 3D", "tech_type": "XT Laser", "aspect_ratio": "1.90:1 Widescreen", "screen_type": "IMAX Commercial Layout", "audio": "5.1 Digital Sound Layer", "width": "59 ft", "height": "30 ft", "status": "Open"},
+            {"location": "INOX Inorbit Mall", "city": "Mumbai", "projection": "IMAX Dual Xenon 3D", "tech_type": "Dual Xenon", "aspect_ratio": "1.90:1 Widescreen", "screen_type": "IMAX Standard Setup", "audio": "5.1 Digital Sound Layer", "width": "57.2 ft", "height": "31.9 ft", "status": "Open"},
+            {"location": "Cinepolis Vivana Mall", "city": "Thane", "projection": "IMAX Dual Xenon 3D", "tech_type": "Dual Xenon", "aspect_ratio": "1.90:1 Widescreen", "screen_type": "IMAX Twin Setup", "audio": "5.1 Digital Sound Layer", "width": "56.9 ft", "height": "31.6 ft", "status": "Open"},
+            {"location": "Cinepolis Nexus Seawoods", "city": "Navi Mumbai", "projection": "IMAX Dual Xenon 3D", "tech_type": "Dual Xenon", "aspect_ratio": "1.90:1 Widescreen", "screen_type": "IMAX Twin Setup", "audio": "5.1 Digital Sound Layer", "width": "56.7 ft", "height": "31.4 ft", "status": "Open"},
+            {"location": "INOX EROS Cinema", "city": "Mumbai", "projection": "IMAX XT Laser 3D", "tech_type": "XT Laser", "aspect_ratio": "1.90:1 Widescreen", "screen_type": "IMAX Single Pod Laser", "audio": "5.1 Digital Sound Layer", "width": "56 ft", "height": "28 ft", "status": "Open"},
+            {"location": "Cinepolis Shantiniketan", "city": "Bengaluru", "projection": "IMAX Dual Xenon 3D", "tech_type": "Dual Xenon", "aspect_ratio": "1.90:1 Widescreen", "screen_type": "IMAX Twin Setup", "audio": "5.1 Digital Sound Layer", "width": "55.76 ft", "height": "29.84 ft", "status": "Open"},
+            {"location": "INOX JioWorld Plaza BKC", "city": "Mumbai", "projection": "IMAX XT Laser 3D", "tech_type": "XT Laser", "aspect_ratio": "1.90:1 Widescreen", "screen_type": "IMAX Single Pod Laser", "audio": "5.1 Digital Sound Layer", "width": "55.2 ft", "height": "29 ft", "status": "Open"},
+            {"location": "Cinepolis Westend Mall", "city": "Pune", "projection": "IMAX Dual Xenon 3D", "tech_type": "Dual Xenon", "aspect_ratio": "1.90:1 Ratio", "audio": "5.1 Digital Enhanced Sound", "width": "55.10 ft", "height": "30.50 ft", "status": "Open"},
+            {"location": "INOX RMZ Galleria", "city": "Bengaluru", "projection": "IMAX Dual Xenon 3D", "tech_type": "Dual Xenon", "aspect_ratio": "1.90:1 Ratio", "audio": "5.1 Digital Enhanced Sound", "width": "55 ft", "height": "31 ft", "status": "Open"},
+            {"location": "INOX R-City Mall", "city": "Mumbai", "projection": "IMAX Dual Xenon 3D", "tech_type": "Dual Xenon", "aspect_ratio": "1.90:1 Ratio", "audio": "5.1 Digital Enhanced Sound", "width": "54.77 ft", "height": "30.17 ft", "status": "Open"},
+            {"location": "PVR Select Citywalk", "city": "New Delhi", "projection": "IMAX Commercial Laser 3D", "tech_type": "Commercial Laser", "aspect_ratio": "1.90:1 Ratio", "audio": "12-Channel Immersive Sound", "width": "53.46 ft", "height": "29.84 ft", "status": "Open"},
+            {"location": "PVR Ambience Mall", "city": "Gurgaon", "projection": "IMAX Dual Xenon 3D", "tech_type": "Dual Xenon", "aspect_ratio": "1.90:1 Ratio", "audio": "5.1 Digital Enhanced Sound", "width": "53.13 ft", "height": "29.52 ft", "status": "Open"},
+            {"location": "PVR Phoenix Palladium Mall", "city": "Ahmedabad", "projection": "IMAX XT Laser 3D", "tech_type": "XT Laser", "aspect_ratio": "1.90:1 Ratio", "audio": "5.1 Digital Enhanced Sound", "width": "53.13 ft", "height": "29.52 ft", "status": "Open"},
+            {"location": "INOX Mantri Mall", "city": "Bengaluru", "projection": "IMAX Dual Xenon 3D", "tech_type": "Dual Xenon", "aspect_ratio": "1.90:1 Ratio", "audio": "5.1 Digital Enhanced Sound", "width": "53.13 ft", "height": "28.86 ft", "status": "Open"},
+            {"location": "Cinepolis Centre Square Mall", "city": "Kochi", "projection": "IMAX XT Laser 3D", "tech_type": "XT Laser", "aspect_ratio": "1.90:1 Ratio", "audio": "5.1 Digital Enhanced Sound", "width": "52 ft", "height": "27 ft", "status": "Open"},
+            {"location": "INOX Paras Nehru Place", "city": "New Delhi", "projection": "IMAX XT Laser 3D", "tech_type": "XT Laser", "aspect_ratio": "1.90:1 Ratio", "audio": "5.1 Digital Enhanced Sound", "width": "51.82 ft", "height": "27.88 ft", "status": "Open"},
+            {"location": "INOX South City Mall", "city": "Kolkata", "projection": "IMAX Dual Xenon 3D", "tech_type": "Dual Xenon", "aspect_ratio": "1.90:1 Ratio", "audio": "5.1 Digital Enhanced Sound", "width": "50.1 ft", "height": "27.6 ft", "status": "Open"},
+            {"location": "INOX Vishal Rajouri Garden", "city": "New Delhi", "projection": "IMAX XT Laser 3D", "tech_type": "XT Laser", "aspect_ratio": "1.90:1 Ratio", "audio": "5.1 Digital Enhanced Sound", "width": "49.85 ft", "height": "26.24 ft", "status": "Open"},
+            {"location": "PVR Superplex Mall of India", "city": "Noida", "projection": "IMAX XT Laser 3D", "tech_type": "XT Laser", "aspect_ratio": "1.90:1 Ratio", "audio": "5.1 Digital Enhanced Sound", "width": "49.19 ft", "height": "25.91 ft", "status": "Open"},
+            {"location": "PVR AIPL Joy Central", "city": "Gurgaon", "projection": "IMAX Laser Engine Setup", "tech_type": "IMAX Laser", "aspect_ratio": "1.90:1 Widescreen", "audio": "5.1 Digital Enhanced Sound", "width": "Custom Sizes", "height": "Custom Sizes", "status": "Under Construction"},
+            {"location": "Miraj IMAX", "city": "Jaipur", "projection": "IMAX Laser Engine Setup", "tech_type": "IMAX Laser", "aspect_ratio": "1.90:1 Widescreen", "audio": "5.1 Digital Enhanced Sound", "width": "Custom Sizes", "height": "Custom Sizes", "status": "Announced"},
+            {"location": "Big Cinemas/Carnival IMAX Wadala", "city": "Mumbai", "projection": "IMAX Dual Xenon 3D", "tech_type": "Dual Xenon", "aspect_ratio": "1.90:1 Layout", "audio": "5.1 Digital Enhanced Sound", "width": "69.4 ft", "height": "38.8 ft", "status": "Closed(Feb '23)"}
+        ];
+
+        const DATA_DOLBY = [
+            {"location": "City Pride, Nyati Plaza Kharadi", "city": "Pune", "projection": "Dual E3LH Projector System", "tech_type": "Dual Laser", "aspect_ratio": "2:1 Config", "screen_type": "Scope Format Screen", "audio": "Dolby Atmos Multichannel", "width": "55 ft", "seats": "309", "status": "Open"},
+            {"location": "AMB Cinemas", "city": "Bengaluru", "projection": "Dual H4D3 Projector System", "tech_type": "Dual Laser", "aspect_ratio": "2.39:1 Matrix", "screen_type": "Scope Format Screen", "audio": "Dolby Atmos Multichannel", "width": "65 ft", "seats": "588", "status": "Open"},
+            {"location": "Allu Cineplex", "city": "Hyderabad", "projection": "Dual E3LH Projector System", "tech_type": "Dual Laser", "aspect_ratio": "1.85:1 Matrix", "screen_type": "Flat Format Screen", "audio": "Dolby Atmos Multichannel", "width": "75 ft", "seats": "644", "status": "Open"},
+            {"location": "LA Cinema", "city": "Trichy", "projection": "Dual E3LH Projector System", "tech_type": "Dual Laser", "aspect_ratio": "2.39:1 Matrix", "screen_type": "Scope Format Screen", "audio": "Dolby Atmos Multichannel", "width": "61 ft", "seats": "456", "status": "Open"},
+            {"location": "EVM Cinemas", "city": "Kochi", "projection": "Dolby Vision Laser Array", "tech_type": "Premium Laser", "aspect_ratio": "Scope Baseline", "screen_type": "Scope Format Screen", "audio": "Dolby Atmos Immersive", "width": "Custom Layout", "seats": "N/A", "status": "Announced"},
+            {"location": "G Cineplex", "city": "Ulikkal", "projection": "Dolby Vision Laser Array", "tech_type": "Premium Laser", "aspect_ratio": "Scope Baseline", "screen_type": "Scope Format Screen", "audio": "Dolby Atmos Immersive", "width": "Custom Layout", "seats": "N/A", "status": "Announced"}
+        ];
+
+        const DATA_BARCO = [
+            {"location": "AMB Cinemas (Screen 1)", "city": "Hyderabad", "projection": "Barco LS-4K Projector Engine", "tech_type": "Barco Single Laser", "aspect_ratio": "1.89:1 Flat Profile", "screen_type": "Flat Format Screen", "audio": "Dolby Atmos Audio System", "width": "59.2 ft", "seats": "392", "status": "Open"},
+            {"location": "Prasads Multiplex (Screen 4)", "city": "Hyderabad", "projection": "Barco LS-4K Projector Engine", "tech_type": "Barco Single Laser", "aspect_ratio": "2.39:1 Scope Profile", "screen_type": "Scope Format Screen", "audio": "Dolby Atmos Audio System", "width": "60.3 ft", "seats": "442", "status": "Open"}
+        ];
+
+        const DATA_EPIQ = [
+            {"location": "V-EPIQ", "city": "Sullurpeta", "projection": "Single 4K Barco Premium Laser", "tech_type": "Single Premium Laser", "aspect_ratio": "2.39:1 Giant Scale", "screen_type": "Scope Format Screen", "audio": "Dolby Atmos Custom Core", "width": "100 ft", "seats": "670", "status": "Open"},
+            {"location": "Broadway Cinemas EPIQ", "city": "Coimbatore", "projection": "Single 4K Barco Premium Laser", "tech_type": "Single Premium Laser", "aspect_ratio": "1.85:1 Giant Scale", "screen_type": "Flat Format Screen", "audio": "Dolby Atmos Custom Core", "width": "70 ft", "seats": "445", "status": "Open"},
+            {"location": "Radiance Cinemas", "city": "Madurai", "projection": "Single 4K Premium Laser", "tech_type": "Single Premium Laser", "aspect_ratio": "Scope Metric", "screen_type": "Scope Format Screen", "audio": "Dolby Atmos Core", "width": "51 ft", "seats": "240", "status": "Open"},
+            {"location": "Palaxi Cinemas", "city": "Kozhikode", "projection": "Single 4K Premium Laser", "tech_type": "Single Premium Laser", "aspect_ratio": "Scope Metric", "screen_type": "Scope Format Screen", "audio": "Dolby Atmos Core", "width": "50 ft", "seats": "242", "status": "Open"},
+            {"location": "Vetri E Square EPIQ 1", "city": "Thanjavur", "projection": "Single 4K Premium Laser", "tech_type": "Single Premium Laser", "aspect_ratio": "Flat Profile Metric", "screen_type": "Flat Format Screen", "audio": "Dolby Atmos Array", "width": "65 ft", "seats": "360", "status": "Open"},
+            {"location": "Vetri E Square EPIQ 2", "city": "Thanjavur", "projection": "Single 4K Premium Laser", "tech_type": "Single Premium Laser", "aspect_ratio": "Flat Profile Metric", "screen_type": "Flat Format Screen", "audio": "Dolby Atmos Array", "width": "61 ft", "seats": "318", "status": "Open"},
+            {"location": "ART Cinemas EPIQ", "city": "Hyderabad", "projection": "Single 4K Premium Laser", "tech_type": "Single Premium Laser", "aspect_ratio": "Flat Profile Matrix", "screen_type": "Flat Format Screen", "audio": "Dolby Atmos Core", "width": "57 ft", "seats": "306", "status": "Open"},
+            {"location": "Rakki Cinemas", "city": "Chennai", "projection": "Single 4K Premium Laser", "tech_type": "Single Premium Laser", "aspect_ratio": "Flat Profile Matrix", "screen_type": "Flat Format Screen", "audio": "Dolby Atmos Core", "width": "57 ft", "seats": "270", "status": "Open"},
+            {"location": "E-Square Cinemas", "city": "Pune", "projection": "Single 4K Premium Laser", "tech_type": "Single Premium Laser", "aspect_ratio": "Flat Profile Matrix", "screen_type": "Flat Format Screen", "audio": "Dolby Atmos Core", "width": "59 ft", "seats": "310", "status": "Open"},
+            {"location": "KAC Udumpet", "city": "Tiruppur", "projection": "EPIQ Premium Projector", "tech_type": "Premium Laser Layer", "aspect_ratio": "Scope Pending", "screen_type": "Scope Format Screen", "audio": "Atmos Array Matrix", "width": "N/A", "seats": "N/A", "status": "Announced"}
+        ];
+
+        const DATA_ONYX = [
+            {"location": "Swagath Shankarnag", "city": "Bengaluru", "brand": "Samsung Onyx Dynamic LED", "tech_type": "Direct LED (No Projector)", "display": "Active 4K LED Screen", "screen_type": "Flat Format Screen", "threed": "Active 3D Integrated", "audio": "Harman Multichannel 7.1", "width": "45 ft", "status": "Open"},
+            {"location": "DLF Avenue Saket", "city": "New Delhi", "brand": "Samsung Onyx Dynamic LED", "tech_type": "Direct LED (No Projector)", "display": "Active 4K LED Screen", "screen_type": "Flat Format Screen", "threed": "Active 3D Integrated", "audio": "Harman Multichannel 7.1", "width": "33.5 ft", "status": "Open"},
+            {"location": "INOX Megaplex Malad", "city": "Mumbai", "brand": "Samsung Onyx Dynamic LED", "tech_type": "Direct LED (No Projector)", "display": "Active 4K LED Screen", "screen_type": "Flat Format Screen", "threed": "Active 3D Integrated", "audio": "Harman Multichannel 7.1", "width": "33.5 ft", "status": "Open"}
+        ];
+
+        const DATA_SCREENX_OTHERS = [
+            {"location": "INOX Quest Mall", "city": "Kolkata", "format": "ScreenX 3-Side Panoramic", "tech_type": "Multi-Projection Cluster", "projection": "Side Wall Projection Arrays", "screen_type": "Panoramic Multi-Wall", "audio": "Dynamic Spatial Surround", "width": "Panoramic Surround", "status": "Open"},
+            {"location": "INOX Inorbit Mall Malad", "city": "Mumbai", "format": "ScreenX 3-Side Panoramic", "tech_type": "Multi-Projection Cluster", "projection": "Side Wall Projection Arrays", "screen_type": "Panoramic Multi-Wall", "audio": "Dynamic Spatial Surround", "width": "Panoramic Surround", "status": "Open"},
+            {"location": "INOX Jasola Mall", "city": "New Delhi", "format": "ScreenX 3-Side Panoramic", "tech_type": "Multi-Projection Cluster", "projection": "Side Wall Projection Arrays", "screen_type": "Panoramic Multi-Wall", "audio": "Dynamic Spatial Surround", "width": "Panoramic Surround", "status": "Open"},
+            {"location": "INOX Mall of Asia", "city": "Bengaluru", "format": "ScreenX 3-Side Panoramic", "tech_type": "Multi-Projection Cluster", "projection": "Side Wall Projection Arrays", "screen_type": "Panoramic Multi-Wall", "audio": "Dynamic Spatial Surround", "width": "Panoramic Surround", "status": "Open"},
+            {"location": "Prasads PCX", "city": "Hyderabad", "format": "Giant Screen Custom PLF", "tech_type": "Dual 4K Laser Engine", "projection": "Dual 4K High contrast Laser", "screen_type": "Scope Format Screen", "audio": "Dolby Atmos (64 Channels Stack)", "width": "98.6ft x 64ft", "status": "Open"},
+            {"location": "Mukta A2 New Excelsior", "city": "Mumbai", "format": "Giant Screen Custom PLF", "tech_type": "Single 4K Laser Engine", "projection": "4K Pure Laser Projector", "screen_type": "Scope Format Screen", "audio": "Dolby Surround Master Tracks", "width": "87.9ft x 37.7ft", "status": "Open"}
+        ];
+
+        let currentActiveTabSegment = 'imax143';
+
+        function navigateToPage(pageName) {
+            document.querySelectorAll('.app-page').forEach(page => page.classList.remove('active-page'));
+            document.querySelectorAll('.page-tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(`page-${pageName}`).classList.add('active-page');
+            document.getElementById(`tab-link-${pageName}`).classList.add('active');
+        }
+
+        function scaleMatteHeight(targetRatio, name, desc, element) {
+            const topBlind = document.getElementById('blindTop');
+            const bottomBlind = document.getElementById('blindBottom');
+            const headerText = document.getElementById('matteHead');
+            const descriptionText = document.getElementById('matteDesc');
+
+            if(element) {
+                const siblings = element.parentElement.querySelectorAll('.viz-btn');
+                siblings.forEach(s => s.classList.remove('active'));
+                element.classList.add('active');
+            }
+
+            let totalMaskPercentage = 0;
+            if (targetRatio === 1.43) totalMaskPercentage = 0;
+            else if (targetRatio === 1.90) totalMaskPercentage = 24.7;
+            else if (targetRatio === 1.85) totalMaskPercentage = 22.7;
+            else if (targetRatio === 2.39) totalMaskPercentage = 40.1;
+
+            let singleJawPercentage = totalMaskPercentage / 2;
+            topBlind.style.height = `${singleJawPercentage}%`;
+            bottomBlind.style.height = `${singleJawPercentage}%`;
+            
+            topBlind.innerHTML = totalMaskPercentage > 0 ? `Masked Bar Viewport (${singleJawPercentage.toFixed(1)}%)` : '';
+            bottomBlind.innerHTML = totalMaskPercentage > 0 ? `Masked Bar Viewport (${singleJawPercentage.toFixed(1)}%)` : '';
+
+            headerText.innerText = name;
+            descriptionText.innerText = desc;
+        }
+
+        function changeActiveSegment(segKey) {
+            currentActiveTabSegment = segKey;
+            const tabIds = ['seg-imax143', 'seg-imaxstd', 'seg-dolby', 'seg-barco', 'seg-epiq', 'seg-onyx', 'seg-screenx'];
+            tabIds.forEach(id => {
+                document.getElementById(id).classList.toggle('active', id === `seg-${segKey}`);
+            });
+            drawGridMatrix();
+        }
+
+        function extractWorkingDataset() {
+            switch(currentActiveTabSegment) {
+                case 'imax143': return DATA_IMAX_143;
+                case 'imaxstd': return DATA_IMAX_STD;
+                case 'dolby': return DATA_DOLBY;
+                case 'barco': return DATA_BARCO;
+                case 'epiq': return DATA_EPIQ;
+                case 'onyx': return DATA_ONYX;
+                case 'screenx': return DATA_SCREENX_OTHERS;
+                default: return DATA_IMAX_143;
+            }
+        }
+
+        function createBadgeTag() {
+            switch(currentActiveTabSegment) {
+                case 'imax143': return `<span class="stub-tag tag-imax143">IMAX Film/GT</span>`;
+                case 'imaxstd': return `<span class="stub-tag tag-imaxstd">IMAX Standard</span>`;
+                case 'dolby': return `<span class="stub-tag tag-dolby">Dolby Cinema</span>`;
+                case 'barco': return `<span class="stub-tag tag-barco">Barco HDR</span>`;
+                case 'epiq': return `<span class="stub-tag tag-epiq">EPIQ Premium</span>`;
+                case 'onyx': return `<span class="stub-tag tag-onyx">Onyx LED</span>`;
+                case 'screenx': return `<span class="stub-tag tag-screenx">ScreenX Panel</span>`;
+            }
+        }
+
+        function autoPopulateCitySelectors() {
+            const dropdown = document.getElementById('filterDropdownCity');
+            const absoluteCollection = [...DATA_IMAX_143, ...DATA_IMAX_STD, ...DATA_DOLBY, ...DATA_BARCO, ...DATA_EPIQ, ...DATA_ONYX, ...DATA_SCREENX_OTHERS];
+            const sortedUniqueCities = [...new Set(absoluteCollection.map(x => x.city))].sort();
+
+            sortedUniqueCities.forEach(city => {
+                let opt = document.createElement('option');
+                opt.value = city;
+                opt.innerText = city;
+                dropdown.appendChild(opt);
+            });
+        }
+
+        function assignClassContext(statusText) {
+            if (!statusText) return 'status-open';
+            let s = statusText.toLowerCase();
+            if (s.includes('open')) return 'status-open';
+            if (s.includes('closed') || s.includes('converted')) return 'status-closed';
+            return 'status-other';
+        }
+
+        function drawGridMatrix() {
+            const container = document.getElementById('ticketStubContainer');
+            const searchVal = document.getElementById('filterInputSearch').value.toLowerCase();
+            const chosenCity = document.getElementById('filterDropdownCity').value;
+            const contextData = extractWorkingDataset();
+
+            container.innerHTML = '';
+
+            contextData.forEach(item => {
+                const matchesSearchText = item.location.toLowerCase().includes(searchVal) || item.city.toLowerCase().includes(searchVal);
+                const matchesCityConstraint = chosenCity === "" || item.city === chosenCity;
+
+                if (matchesSearchText && matchesCityConstraint) {
+                    const stubElement = document.createElement('div');
+                    stubElement.className = 'stub-card';
+
+                    let payloadDetailsHTML = '';
+                    if (currentActiveTabSegment === 'imax143' || currentActiveTabSegment === 'imaxstd') {
+                        payloadDetailsHTML = `
+                            <div class="info-cell"><div class="cell-label">Hardware Deck</div><div class="cell-value" style="color:var(--accent-neon);">${item.tech_type}</div></div>
+                            <div class="info-cell"><div class="cell-label">Projection Array</div><div class="cell-value">${item.projection}</div></div>
+                            <div class="info-cell"><div class="cell-label">Screen Target</div><div class="cell-value">${item.aspect_ratio}</div></div>
+                            <div class="info-cell"><div class="cell-label">Matte Width</div><div class="cell-value">${item.width || 'Custom Size'}</div></div>
+                            <div class="info-cell"><div class="cell-label">Matte Height</div><div class="cell-value">${item.height || 'Custom Size'}</div></div>
+                            <div class="info-cell"><div class="cell-label">Acoustics Spec</div><div class="cell-value">${item.audio}</div></div>
+                        `;
+                    } else {
+                        payloadDetailsHTML = `
+                            <div class="info-cell"><div class="cell-label">Hardware Deck</div><div class="cell-value" style="color:var(--accent-neon);">${item.tech_type || 'Custom Node'}</div></div>
+                            <div class="info-cell"><div class="cell-label">Screen Layout</div><div class="cell-value" style="color:var(--gold); font-weight:bold;">${item.screen_type}</div></div>
+                            <div class="info-cell"><div class="cell-label">Projector Specs</div><div class="cell-value">${item.projection || item.brand || item.format}</div></div>
+                            <div class="info-cell"><div class="cell-label">Aspect Setup</div><div class="cell-value">${item.aspect_ratio || item.display}</div></div>
+                            <div class="info-cell"><div class="cell-label">Physical Width</div><div class="cell-value">${item.width}</div></div>
+                            <div class="info-cell"><div class="cell-label">Acoustics Spec</div><div class="cell-value">${item.audio}</div></div>
+                        `;
+                    }
+
+                    payloadDetailsHTML += `
+                        <div class="info-cell"><div class="cell-label">Operational Status</div><div class="cell-value"><span class="status-pill ${assignClassContext(item.status)}">${item.status}</span></div></div>
+                    `;
+
+                    stubElement.innerHTML = `
+                        <div class="stub-header">
+                            ${createBadgeTag()}
+                            <div class="stub-title">${item.location}</div>
+                            <div class="stub-subtitle">${item.city}</div>
+                        </div>
+                        <div class="stub-body">
+                            ${payloadDetailsHTML}
+                        </div>
+                    `;
+                    container.appendChild(stubElement);
+                }
+            });
+        }
+
+        window.onload = () => {
+            autoPopulateCitySelectors();
+            drawGridMatrix();
+        };
+    </script>
+</body>
+</html>
